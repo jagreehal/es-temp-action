@@ -1,0 +1,17 @@
+{
+  "name": "es-temp-action",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Iteration testbed for jagreehal/executable-stories-action",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:install": "playwright install --with-deps chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.3.0",
+    "executable-stories-playwright": "^8.2.9",
+    "typescript": "^5.9.3"
+  }
+}

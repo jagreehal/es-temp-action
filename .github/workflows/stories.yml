@@ -1,0 +1,38 @@
+name: Executable Stories
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        continue-on-error: true
+
+      - name: Surface Executable Stories
+        if: always()
+        uses: jagreehal/executable-stories-action@v1
+        with:
+          report-dir: reports
+          output-name: test-results
+          artifact-name: executable-stories-report
+          comment-title: Executable Stories
