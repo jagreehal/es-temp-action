@@ -30,7 +30,7 @@ jobs:
 
       - name: Surface Executable Stories
         if: always()
-        uses: jagreehal/executable-stories-action@v1
+        uses: jagreehal/executable-stories-action@fix/pr-comment-base64-handling
         with:
           report-dir: reports
           output-name: test-results
