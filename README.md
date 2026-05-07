@@ -24,3 +24,5 @@ To validate an unreleased fix, change the workflow's `uses:` line to the branch:
 ```yaml
 uses: jagreehal/executable-stories-action@<branch-name>
 ```
+
+<!-- PR #1: reproduce PR-comment markdown truncation bug seen in mountly PR #24 -->
