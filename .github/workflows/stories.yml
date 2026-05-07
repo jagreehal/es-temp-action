@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
@@ -36,3 +36,4 @@ jobs:
           output-name: test-results
           artifact-name: executable-stories-report
           comment-title: Executable Stories
+          host-images: branch
