@@ -21,6 +21,8 @@ export default defineConfig({
         formats: ['markdown', 'html'],
         outputDir: 'reports',
         outputName: 'test-results',
+        // Emit the machine-readable run JSON the Evidence Review (mode: review) consumes.
+        rawRunPath: '.executable-stories/raw-run.json',
         markdown: {
           title: 'Executable Stories',
           includeStatusIcons: true,
