@@ -5,7 +5,7 @@
   "description": "Iteration testbed for jagreehal/executable-stories-action",
   "type": "module",
   "scripts": {
-    "test": "playwright test",
+    "test": "playwright test; node .github/setup.js",
     "test:install": "playwright install --with-deps chromium"
   },
   "devDependencies": {
