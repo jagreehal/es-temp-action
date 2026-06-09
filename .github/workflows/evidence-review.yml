@@ -1,0 +1,68 @@
+name: Evidence Review (demo)
+
+# Demonstrates jagreehal/executable-stories-action in `mode: review`:
+# correlate the Playwright run against this PR's diff and post an Evidence
+# Review (uncovered / weak / strong bands) as a PR comment + HTML artifact.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so the action can diff against the PR base ref.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests (writes reports + raw-run.json)
+        run: npx playwright test
+        continue-on-error: true
+
+      # The released formatter binary does not yet include the `review`
+      # subcommand, so build one from the feature branch and pass it to the
+      # action via `formatter-binary`. (Once review ships in a release, drop
+      # this job and the formatter-binary input.)
+      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Build review-capable executable-stories binary
+        run: |
+          git clone --depth 1 --branch feat/evidence-review-20260529 \
+            https://github.com/jagreehal/executable-stories.git es
+          cd es
+          pnpm install --frozen-lockfile
+          cd packages/executable-stories-formatters
+          bun build src/cli.ts --compile --outfile "$GITHUB_WORKSPACE/es-bin"
+          "$GITHUB_WORKSPACE/es-bin" review --help | head -3 || true
+
+      - name: Evidence Review
+        if: always()
+        uses: jagreehal/executable-stories-action@feat/review-mode
+        with:
+          mode: review
+          run-json: .executable-stories/raw-run.json
+          report-dir: reports
+          output-name: evidence-review
+          artifact-name: evidence-review-report
+          comment-title: Evidence Review
+          formatter-binary: ${{ github.workspace }}/es-bin
+          # Opt-in gate — left advisory for the demo. Uncomment to fail the
+          # check when changed code has no evidence:
+          # fail-on: uncovered

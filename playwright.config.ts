@@ -21,6 +21,10 @@ export default defineConfig({
         formats: ['markdown', 'html'],
         outputDir: 'reports',
         outputName: 'test-results',
+        // Emit the machine-readable run JSON the Evidence Review (mode: review) consumes.
+        // Absolute (via __dirname) so it lands at the repo root regardless of Playwright's
+        // rootDir — the reporter resolves rawRunPath relative to config.rootDir (the tests dir).
+        rawRunPath: path.join(__dirname, '.executable-stories/raw-run.json'),
         markdown: {
           title: 'Executable Stories',
           includeStatusIcons: true,
